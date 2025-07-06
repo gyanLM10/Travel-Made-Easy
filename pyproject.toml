@@ -1,0 +1,9 @@
+[project]
+name = "Travel-Made-Easy"
+version = "0.1.0"
+description = "An AI-powered travel planner that helps users create personalized itineraries, find the best flights and hotels, and explore attractions based on their preferences."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.3.0",
+]
