@@ -35,7 +35,7 @@ if submit_button and user_input.strip():
             markdown_content = f"""# 🌍 AI Travel Plan
 
 **Generated:** {datetime.datetime.now().strftime('%Y-%m-%d at %H:%M')}  
-**Created by:** Roameo's Travel Agent
+**Created by:** Gyan's Travel Agent
 
 ---
 
