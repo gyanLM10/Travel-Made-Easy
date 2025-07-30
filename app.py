@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import datetime
 
-BASE_URL = "http://localhost:8040"
+BASE_URL = "http://localhost:8080"
 
 st.set_page_config(
     page_title="🌍 Travel Made Easy",
@@ -51,6 +51,4 @@ if submit_button and user_input.strip():
 
     except Exception as e:
         st.error(f"Something went wrong: {e}")
-
-
 
