@@ -48,7 +48,7 @@ Travel-Made-Easy is an **AI agent-based travel assistant** that helps users gene
 
 | Layer        | Tool/Library                |
 |--------------|-----------------------------|
-| 💬 LLM       | Groq (`llama3-8b-8192`)     |
+| 💬 LLM       | Groq ('llama-3.1-8b-instant')     |
 | 🧠 Agent     | LangChain (`RunnableGraph`) |
 | 🧰 Tools     | Custom Python-based tools   |
 | ⚙️ Backend   | FastAPI                     |
