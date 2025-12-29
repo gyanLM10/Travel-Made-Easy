@@ -10,47 +10,61 @@ from Agent.agentic_workflow import GraphBuilder
 # Load environment variables
 load_dotenv()
 
+
 def get_travel_plan(question: str) -> str:
+    """
+    Runs the agentic travel planning workflow and returns a final string response.
+    This function GUARANTEES that no AIMessage object is leaked outside.
+    """
     try:
         print(f"\n📥 Received query: {question}")
 
-        # Initialize the agent workflow with tools
+        # Initialize the agent workflow
         graph_builder = GraphBuilder(model_provider="groq")
 
-        # ✅ Print all registered tools for debugging
+        # Debug: list registered tools
         print("\n🔧 Registered Tools:")
         for tool in graph_builder.tools:
             print("✅", tool.name)
 
-        # Build LangGraph flow
+        # Build LangGraph
         graph = graph_builder()
 
-        # Build system + user message sequence
+        # Input messages (LangGraph-compatible)
         messages = {
             "messages": [
                 {
                     "role": "system",
                     "content": (
                         "You are an expert travel planner with access to tools. "
-                        "Use tools like `search_attractions`, `search_restaurants`, etc. "
-                        "to answer queries accurately. Always prefer tool calls for external data."
-                    )
+                        "Use tools like `search_attractions`, `search_restaurants`, "
+                        "`search_activities`, and `search_transportation` whenever needed. "
+                        "Always prefer tool calls for external and factual information."
+                    ),
                 },
                 {
                     "role": "user",
-                    "content": question
-                }
+                    "content": question,
+                },
             ]
         }
 
         # Run the agentic workflow
         output = graph.invoke(messages)
 
-        # Extract final response
+        # ---- SAFE EXTRACTION (AIMessage FIX) ----
         if isinstance(output, dict) and "messages" in output:
-            return output["messages"][-1].get("content", "⚠️ No content found in response.")
-        else:
-            return str(output)
+            last_message = output["messages"][-1]
+
+            # LangChain AIMessage → use .content
+            if hasattr(last_message, "content"):
+                return last_message.content
+
+            # Fallback safety
+            return str(last_message)
+
+        # If output is not message-based
+        return str(output)
 
     except Exception as e:
         print("❌ Exception occurred:", str(e))

@@ -1,82 +1,67 @@
-import os
-import json
 from langchain_tavily import TavilySearch
 from langchain_google_community import GooglePlacesTool, GooglePlacesAPIWrapper
 
 
+# -----------------------------
+# Google Places
+# -----------------------------
 class GooglePlaceSearchTool:
     def __init__(self, api_key: str):
         self.places_wrapper = GooglePlacesAPIWrapper(gplaces_api_key=api_key)
         self.places_tool = GooglePlacesTool(api_wrapper=self.places_wrapper)
 
-    def google_search_attractions(self, place: str) -> dict:
-        """
-        Searches for attractions in the specified place using GooglePlaces API.
-        """
-        return self.places_tool.run(f"top attractive places in and around {place}")
+    def attractions(self, place: str) -> str:
+        return self.places_tool.run(
+            f"Top tourist attractions in {place}. Return short bullet points only."
+        )
 
-    def google_search_restaurants(self, place: str) -> dict:
-        """
-        Searches for available restaurants in the specified place using GooglePlaces API.
-        """
-        return self.places_tool.run(f"what are the top 10 restaurants and eateries in and around {place}?")
+    def restaurants(self, place: str) -> str:
+        return self.places_tool.run(
+            f"Top restaurants and eateries in {place}. Return short bullet points only."
+        )
 
-    def google_search_activity(self, place: str) -> dict:
-        """
-        Searches for popular activities in the specified place using GooglePlaces API.
-        """
-        return self.places_tool.run(f"Activities in and around {place}")
+    def activities(self, place: str) -> str:
+        return self.places_tool.run(
+            f"Popular activities in {place}. Return short bullet points only."
+        )
 
-    def google_search_transportation(self, place: str) -> dict:
-        """
-        Searches for available modes of transportation in the specified place using GooglePlaces API.
-        """
-        return self.places_tool.run(f"What are the different modes of transportations available in {place}")
+    def transportation(self, place: str) -> str:
+        return self.places_tool.run(
+            f"Modes of local transportation in {place}. Return concise list."
+        )
 
 
+# -----------------------------
+# Tavily (Web Search)
+# -----------------------------
 class TavilyPlaceSearchTool:
     def __init__(self):
-        pass
+        self.tool = TavilySearch(topic="general", include_answer="basic")
 
-    def tavily_search_attractions(self, place: str) -> dict:
+    def _query(self, query: str) -> str:
         """
-        Searches for attractions in the specified place using TavilySearch.
+        Internal helper that always returns a SHORT string.
+        Compatible with LangChain AIMessage output.
         """
-        tavily_tool = TavilySearch(topic="general", include_answer="advanced")
-        result = tavily_tool.invoke({"query": f"top attractive places in and around {place}"})
-        if isinstance(result, dict) and result.get("answer"):
-            return result["answer"]
-        return result
+        result = self.tool.invoke({"query": query})
 
-    def tavily_search_restaurants(self, place: str) -> dict:
-        """
-        Searches for available restaurants in the specified place using TavilySearch.
-        """
-        tavily_tool = TavilySearch(topic="general", include_answer="advanced")
-        result = tavily_tool.invoke({"query": f"what are the top 10 restaurants and eateries in and around {place}."})
-        if isinstance(result, dict) and result.get("answer"):
-            return result["answer"]
-        return result
+        # LangChain returns AIMessage
+        if hasattr(result, "content"):
+            return result.content[:1500]
 
-    def tavily_search_activity(self, place: str) -> dict:
-        """
-        Searches for popular activities in the specified place using TavilySearch.
-        """
-        tavily_tool = TavilySearch(topic="general", include_answer="advanced")
-        result = tavily_tool.invoke({"query": f"activities in and around {place}"})
-        if isinstance(result, dict) and result.get("answer"):
-            return result["answer"]
-        return result
+        # Fallback safety (should rarely happen)
+        return str(result)[:1500]
 
-    def tavily_search_transportation(self, place: str) -> dict:
-        """
-        Searches for available modes of transportation in the specified place using TavilySearch.
-        """
-        tavily_tool = TavilySearch(topic="general", include_answer="advanced")
-        result = tavily_tool.invoke({"query": f"What are the different modes of transportations available in {place}"})
-        if isinstance(result, dict) and result.get("answer"):
-            return result["answer"]
-        return result
+    def attractions(self, place: str) -> str:
+        return self._query(f"Top tourist attractions in {place}")
 
+    def restaurants(self, place: str) -> str:
+        return self._query(f"Best restaurants and local food in {place}")
+
+    def activities(self, place: str) -> str:
+        return self._query(f"Best activities and experiences in {place}")
+
+    def transportation(self, place: str) -> str:
+        return self._query(f"Local transportation options in {place}")
 
 
