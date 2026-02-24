@@ -11,7 +11,6 @@ requests
 langchain-google-community[places]==2.0.4
 langchain_tavily
 langchain_groq
-langchain_openai
 langgraph
 pyyaml>=6.0
 watchdog

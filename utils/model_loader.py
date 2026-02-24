@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from typing import Literal
 from pydantic import BaseModel
 from langchain_groq import ChatGroq
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 # Load environment variables once (local .env)
 load_dotenv()
@@ -16,10 +16,11 @@ try:
     import streamlit as st
     _SECRET_KEYS = [
         "GROQ_API_KEY",
-        "OPENAI_API_KEY",
+        "GOOGLE_API_KEY",
         "TAVILY_API_KEY",
         "GPLACES_API_KEY",
         "OPENWEATHERMAP_API_KEY",
+        "EXCHANGE_RATE_API_KEY",
     ]
     for _key in _SECRET_KEYS:
         if _key not in os.environ:
@@ -34,10 +35,10 @@ except Exception:
 class ModelLoader(BaseModel):
     """
     Central LLM factory.
-    This class must ONLY create and return LLM instances.
+    Supported providers: 'gemini' (default), 'groq'
     """
 
-    model_provider: Literal["groq", "openai"] = "groq"
+    model_provider: Literal["gemini", "groq"] = "gemini"
 
     class Config:
         arbitrary_types_allowed = True
@@ -46,17 +47,34 @@ class ModelLoader(BaseModel):
         print("🔁 Initializing LLM")
         print(f"🔧 Provider: {self.model_provider}")
 
+        if self.model_provider == "gemini":
+            return self._load_gemini()
+
         if self.model_provider == "groq":
             return self._load_groq()
-
-        if self.model_provider == "openai":
-            return self._load_openai()
 
         raise ValueError(f"Unsupported model provider: {self.model_provider}")
 
     # -------------------------
     # Providers
     # -------------------------
+
+    def _load_gemini(self):
+        api_key = os.getenv("GOOGLE_API_KEY")
+        if not api_key:
+            raise ValueError("❌ GOOGLE_API_KEY not set")
+
+        model_name = "gemini-1.5-flash"
+
+        print(f"📡 Gemini model: {model_name}")
+
+        return ChatGoogleGenerativeAI(
+            model=model_name,
+            temperature=0.4,
+            max_output_tokens=2000,
+            timeout=60,
+            google_api_key=api_key,
+        )
 
     def _load_groq(self):
         api_key = os.getenv("GROQ_API_KEY")
@@ -70,22 +88,6 @@ class ModelLoader(BaseModel):
         return ChatGroq(
             model=model_name,
             temperature=0.4,
-            max_tokens=1500,     # 🔒 token safety
-            timeout=60
-        )
-
-    def _load_openai(self):
-        api_key = os.getenv("OPENAI_API_KEY")
-        if not api_key:
-            raise ValueError("❌ OPENAI_API_KEY not set")
-
-        model_name = "gpt-4-turbo"
-
-        print(f"📡 OpenAI model: {model_name}")
-
-        return ChatOpenAI(
-            model=model_name,
-            temperature=0.4,
-            max_tokens=2000,     # 🔒 larger final synthesis
+            max_tokens=1500,
             timeout=60
         )

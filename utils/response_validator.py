@@ -75,17 +75,18 @@ def validate(question: str, plan: str) -> ValidationResult:
 
 
 def _run_critic(question: str, plan: str) -> ValidationResult:
-    from langchain_openai import ChatOpenAI
+    from langchain_google_genai import ChatGoogleGenerativeAI
 
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
         return _safe_default()
 
-    critic_llm = ChatOpenAI(
-        model="gpt-4o-mini",
+    critic_llm = ChatGoogleGenerativeAI(
+        model="gemini-1.5-flash",
         temperature=0,          # deterministic evaluation
-        max_tokens=512,
+        max_output_tokens=512,
         timeout=30,
+        google_api_key=api_key,
     )
 
     prompt = _CRITIC_PROMPT.format(question=question, plan=plan[:3000])  # cap length
