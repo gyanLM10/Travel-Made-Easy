@@ -69,3 +69,22 @@ def get_travel_plan(question: str) -> str:
     except Exception as e:
         print("❌ Exception occurred:", str(e))
         return f"Error: {str(e)}"
+
+
+def get_travel_plan_with_validation(question: str) -> dict:
+    """
+    Runs the travel planner, then passes the result through the critic LLM
+    for hallucination scoring.
+
+    Returns:
+        {
+            "plan":       str   — the travel plan text,
+            "validation": dict  — confidence score & uncertain claims
+        }
+    """
+    from utils.response_validator import validate
+
+    plan = get_travel_plan(question)
+    validation = validate(question=question, plan=plan)
+
+    return {"plan": plan, "validation": validation}
