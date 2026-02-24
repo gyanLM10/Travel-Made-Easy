@@ -9,9 +9,10 @@ class WeatherForecastTool:
 
     def __init__(self, api_key: str):
         if not api_key:
-            raise ValueError("OPENWEATHERMAP_API_KEY not provided")
+            import warnings
+            warnings.warn("OPENWEATHERMAP_API_KEY not provided – weather tools will return empty results.")
 
-        self.api_key = api_key
+        self.api_key = api_key or ""
         self.base_url = "https://api.openweathermap.org/data/2.5"
 
     def get_current_weather(self, place: str) -> dict:

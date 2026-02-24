@@ -30,6 +30,19 @@ class GooglePlaceSearchTool:
             f"Modes of local transportation in {place}. Return concise list."
         )
 
+    # Aliases used by place_search_tool.py
+    def google_search_attractions(self, place: str) -> str:
+        return self.attractions(place)
+
+    def google_search_restaurants(self, place: str) -> str:
+        return self.restaurants(place)
+
+    def google_search_activity(self, place: str) -> str:
+        return self.activities(place)
+
+    def google_search_transportation(self, place: str) -> str:
+        return self.transportation(place)
+
 
 # -----------------------------
 # Tavily (Web Search)
