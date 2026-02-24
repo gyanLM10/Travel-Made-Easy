@@ -1,26 +1,5 @@
 import streamlit as st
 import datetime
-import traceback
-
-# ── DEBUG BLOCK: shows any import/startup error directly in the UI ──────────
-_IMPORT_ERRORS = []
-
-def _try_import(label, fn):
-    try:
-        result = fn()
-        return result
-    except Exception as e:
-        _IMPORT_ERRORS.append(f"❌ {label}:\n{traceback.format_exc()}")
-        return None
-
-_try_import("Agent.agentic_workflow", lambda: __import__("Agent.agentic_workflow", fromlist=["GraphBuilder"]))
-_try_import("utils.model_loader",     lambda: __import__("utils.model_loader", fromlist=["ModelLoader"]))
-_try_import("prompt_library.prompt",  lambda: __import__("prompt_library.prompt", fromlist=["SYSTEM_PROMPT"]))
-_try_import("tools.weather_info_tool",    lambda: __import__("tools.weather_info_tool", fromlist=["WeatherInfoTool"]))
-_try_import("tools.place_search_tool",    lambda: __import__("tools.place_search_tool", fromlist=["PlaceSearchTool"]))
-_try_import("tools.expense_calculator_tool", lambda: __import__("tools.expense_calculator_tool", fromlist=["CalculatorTool"]))
-_try_import("tools.currency_conversion_tool", lambda: __import__("tools.currency_conversion_tool", fromlist=["CurrencyConverterTool"]))
-# ────────────────────────────────────────────────────────────────────────────
 
 def get_travel_plan(question: str) -> str:
     try:
@@ -48,13 +27,7 @@ st.set_page_config(
 
 st.title("🌍 Travel Made Easy")
 
-# ── DEBUG PANEL (remove after identifying error) ─────────────────────────────
-if _IMPORT_ERRORS:
-    st.error("⚠️ Startup import errors detected (debug mode):")
-    for err in _IMPORT_ERRORS:
-        st.code(err, language="python")
-    st.stop()
-# ─────────────────────────────────────────────────────────────────────────────
+
 
 st.header("How can I help you in planning a trip?")
 
