@@ -15,4 +15,4 @@ langchain_openai
 langgraph
 pyyaml>=6.0
 watchdog
-grpcio==1.62.3
+grpcio==1.74.0
