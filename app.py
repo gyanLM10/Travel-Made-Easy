@@ -5,8 +5,11 @@ import datetime
 def get_travel_plan_validated(question: str) -> dict:
     """Run the planner + critic. Returns {plan, validation}."""
     try:
-        from travel_agent import get_travel_plan_with_validation
-        return get_travel_plan_with_validation(question)
+        from travel_agent import get_travel_plan
+        from utils.response_validator import validate
+        plan = get_travel_plan(question)
+        validation = validate(question=question, plan=plan)
+        return {"plan": plan, "validation": validation}
     except Exception as exc:
         return {
             "plan": (
