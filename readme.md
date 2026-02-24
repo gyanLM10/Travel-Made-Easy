@@ -104,9 +104,9 @@ Configured in `utils/model_loader.py` via `ModelLoader`:
 
 | Provider | Model | Temp | Max Tokens |
 |---|---|---|---|
-| **Gemini** (default) | `gemini-1.5-flash` | 0.4 | 2000 |
+| **Gemini** (default) | `gemini-2.0-flash` | 0.4 | 2000 |
 | **Groq** (fallback) | `llama-3.1-8b-instant` | 0.4 | 1500 |
-| **Critic** (hallucination) | `gemini-1.5-flash` | **0** | 512 |
+| **Critic** (hallucination) | `gemini-2.0-flash` | **0** | 512 |
 
 Switch provider in `travel_agent.py`:
 ```python
