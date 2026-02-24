@@ -5,8 +5,30 @@ from pydantic import BaseModel
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 
-# Load environment variables once
+# Load environment variables once (local .env)
 load_dotenv()
+
+# ── Streamlit Cloud secrets fallback ───────────────────────────────────────
+# When running on Streamlit Cloud, .env is not deployed (it's gitignored).
+# Instead, secrets are stored via the Streamlit Cloud dashboard and exposed
+# via st.secrets. Inject them into os.environ so all downstream code works.
+try:
+    import streamlit as st
+    _SECRET_KEYS = [
+        "GROQ_API_KEY",
+        "OPENAI_API_KEY",
+        "TAVILY_API_KEY",
+        "GPLACES_API_KEY",
+        "OPENWEATHERMAP_API_KEY",
+    ]
+    for _key in _SECRET_KEYS:
+        if _key not in os.environ:
+            _val = st.secrets.get(_key)
+            if _val:
+                os.environ[_key] = _val
+except Exception:
+    pass  # Not running inside Streamlit, or secrets not configured yet
+# ───────────────────────────────────────────────────────────────────────────
 
 
 class ModelLoader(BaseModel):

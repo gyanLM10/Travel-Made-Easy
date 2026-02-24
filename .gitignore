@@ -10,3 +10,6 @@ wheels/
 .venv
 env
 .env
+
+# Streamlit secrets (contains real API keys - DO NOT COMMIT)
+.streamlit/secrets.toml

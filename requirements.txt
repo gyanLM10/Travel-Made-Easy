@@ -14,9 +14,6 @@ langchain_groq
 langchain_openai
 langgraph
 langchain-google-community[places]
-pyyaml==6.0
+pyyaml>=6.0
 watchdog
-
-
-
--e .
+openai-whisper
