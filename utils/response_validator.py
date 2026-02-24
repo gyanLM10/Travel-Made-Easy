@@ -82,7 +82,7 @@ def _run_critic(question: str, plan: str) -> ValidationResult:
         return _safe_default()
 
     critic_llm = ChatGoogleGenerativeAI(
-        model="gemini-2.0-flash",
+        model="gemini-1.5-flash",
         temperature=0,          # deterministic evaluation
         max_output_tokens=512,
         timeout=30,

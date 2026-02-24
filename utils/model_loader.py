@@ -64,7 +64,7 @@ class ModelLoader(BaseModel):
         if not api_key:
             raise ValueError("❌ GOOGLE_API_KEY not set")
 
-        model_name = "gemini-2.0-flash"
+        model_name = "gemini-1.5-flash"
 
         print(f"📡 Gemini model: {model_name}")
 
