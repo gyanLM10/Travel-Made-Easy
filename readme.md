@@ -104,13 +104,13 @@ Configured in `utils/model_loader.py` via `ModelLoader`:
 
 | Provider | Model | Temp | Max Tokens |
 |---|---|---|---|
-| **Groq** (default) | `llama-3.1-8b-instant` | 0.4 | 1500 |
-| **OpenAI** | `gpt-4-turbo` | 0.4 | 2000 |
-| **Critic** (hallucination) | `llama-3.1-8b-instant` | **0** | 512 |
+| **Gemini** (default) | `gemini-1.5-flash` | 0.4 | 2000 |
+| **Groq** (fallback) | `llama-3.1-8b-instant` | 0.4 | 1500 |
+| **Critic** (hallucination) | `gemini-1.5-flash` | **0** | 512 |
 
 Switch provider in `travel_agent.py`:
 ```python
-graph_builder = GraphBuilder(model_provider="groq")   # or "openai"
+graph_builder = GraphBuilder(model_provider="gemini")   # or "groq"
 ```
 
 ---
@@ -181,13 +181,13 @@ If the critic fails for any reason, it returns a safe default and the plan is st
 ## API Keys Required
 
 | Key | Where to Get | Used By |
-|---|---|---|
-| `GROQ_API_KEY` | [console.groq.com](https://console.groq.com) | Primary LLM + Critic |
+|---|---|---------|
+| `GOOGLE_API_KEY` | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) | Planner + Critic (Gemini) |
 | `GPLACES_API_KEY` | [Google Cloud Console](https://console.cloud.google.com) → Places API | Place search |
 | `TAVILY_API_KEY` | [tavily.com](https://tavily.com) | Place search fallback |
 | `OPENWEATHERMAP_API_KEY` | [openweathermap.org](https://openweathermap.org/api) | Weather tools |
 | `EXCHANGE_RATE_API_KEY` | [exchangerate-api.com](https://exchangerate-api.com) | Currency conversion |
-| `OPENAI_API_KEY` | [platform.openai.com](https://platform.openai.com) | Optional: OpenAI provider / Whisper |
+| `GROQ_API_KEY` | [console.groq.com](https://console.groq.com) | Optional: Groq fallback provider |
 
 ---
 
@@ -222,7 +222,7 @@ streamlit run app.py
 3. Under **Settings → Secrets**, add all API keys in TOML format:
 
 ```toml
-GROQ_API_KEY = "gsk_..."
+GOOGLE_API_KEY = "AIza..."
 GPLACES_API_KEY = "AIza..."
 TAVILY_API_KEY = "tvly-..."
 OPENWEATHERMAP_API_KEY = "..."
@@ -239,7 +239,7 @@ EXCHANGE_RATE_API_KEY = "..."
 |---|---|
 | UI | Streamlit |
 | Agent Framework | LangGraph (`StateGraph`, `MessagesState`, `ToolNode`) |
-| LLM | Groq / OpenAI via LangChain |
+| LLM | Gemini 1.5 Flash via `langchain-google-genai` |
 | Place Search | `langchain-google-community[places]` + Tavily |
 | Weather | OpenWeatherMap REST API |
 | Currency | ExchangeRate-API v6 |
