@@ -9,6 +9,7 @@ pydantic
 httpx
 requests
 langchain-google-community[places]==2.0.4
+langchain-google-genai
 langchain_tavily
 langchain_groq
 langgraph
