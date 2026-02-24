@@ -75,14 +75,14 @@ def validate(question: str, plan: str) -> ValidationResult:
 
 
 def _run_critic(question: str, plan: str) -> ValidationResult:
-    from langchain_groq import ChatGroq
+    from langchain_openai import ChatOpenAI
 
-    api_key = os.getenv("GROQ_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         return _safe_default()
 
-    critic_llm = ChatGroq(
-        model="llama-3.1-8b-instant",
+    critic_llm = ChatOpenAI(
+        model="gpt-4o-mini",
         temperature=0,          # deterministic evaluation
         max_tokens=512,
         timeout=30,

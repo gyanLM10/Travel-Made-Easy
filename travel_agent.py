@@ -20,7 +20,7 @@ def get_travel_plan(question: str) -> str:
         print(f"\n📥 Received query: {question}")
 
         # Initialize the agent workflow
-        graph_builder = GraphBuilder(model_provider="groq")
+        graph_builder = GraphBuilder(model_provider="openai")
 
         # Debug: list registered tools
         print("\n🔧 Registered Tools:")
@@ -50,7 +50,9 @@ def get_travel_plan(question: str) -> str:
         }
 
         # Run the agentic workflow
-        output = graph.invoke(messages)
+        # recursion_limit caps tool-call rounds to prevent context overflow
+        # (Groq free tier: 6000 tokens/min; tool results accumulate fast)
+        output = graph.invoke(messages, config={"recursion_limit": 8})
 
         # ---- SAFE EXTRACTION (AIMessage FIX) ----
         if isinstance(output, dict) and "messages" in output:
