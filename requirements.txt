@@ -9,9 +9,9 @@ pydantic
 httpx
 requests
 langchain-google-community[places]==2.0.4
-langchain-google-genai
 langchain_tavily
 langchain_groq
+langchain_openai
 langgraph
 pyyaml>=6.0
 watchdog

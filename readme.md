@@ -104,13 +104,13 @@ Configured in `utils/model_loader.py` via `ModelLoader`:
 
 | Provider | Model | Temp | Max Tokens |
 |---|---|---|---|
-| **Gemini** (default) | `gemini-1.5-flash` | 0.4 | 2000 |
+| **OpenAI** (default) | `gpt-4o-mini` | 0.4 | 2000 |
 | **Groq** (fallback) | `llama-3.1-8b-instant` | 0.4 | 1500 |
-| **Critic** (hallucination) | `gemini-1.5-flash` | **0** | 512 |
+| **Critic** (hallucination) | `gpt-4o-mini` | **0** | 512 |
 
 Switch provider in `travel_agent.py`:
 ```python
-graph_builder = GraphBuilder(model_provider="gemini")   # or "groq"
+graph_builder = GraphBuilder(model_provider="openai")   # or "groq"
 ```
 
 ---
@@ -181,8 +181,8 @@ If the critic fails for any reason, it returns a safe default and the plan is st
 ## API Keys Required
 
 | Key | Where to Get | Used By |
-|---|---|---------|
-| `GOOGLE_API_KEY` | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) | Planner + Critic (Gemini) |
+|---|---|---|
+| `OPENAI_API_KEY` | [platform.openai.com](https://platform.openai.com) | Planner (gpt-4o-mini) + Critic |
 | `GPLACES_API_KEY` | [Google Cloud Console](https://console.cloud.google.com) → Places API | Place search |
 | `TAVILY_API_KEY` | [tavily.com](https://tavily.com) | Place search fallback |
 | `OPENWEATHERMAP_API_KEY` | [openweathermap.org](https://openweathermap.org/api) | Weather tools |
@@ -222,7 +222,7 @@ streamlit run app.py
 3. Under **Settings → Secrets**, add all API keys in TOML format:
 
 ```toml
-GOOGLE_API_KEY = "AIza..."
+OPENAI_API_KEY = "sk-..."
 GPLACES_API_KEY = "AIza..."
 TAVILY_API_KEY = "tvly-..."
 OPENWEATHERMAP_API_KEY = "..."
@@ -239,7 +239,7 @@ EXCHANGE_RATE_API_KEY = "..."
 |---|---|
 | UI | Streamlit |
 | Agent Framework | LangGraph (`StateGraph`, `MessagesState`, `ToolNode`) |
-| LLM | Gemini 1.5 Flash via `langchain-google-genai` |
+| LLM | OpenAI (`gpt-4o-mini`) via `langchain-openai` |
 | Place Search | `langchain-google-community[places]` + Tavily |
 | Weather | OpenWeatherMap REST API |
 | Currency | ExchangeRate-API v6 |

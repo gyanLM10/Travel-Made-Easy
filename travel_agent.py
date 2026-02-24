@@ -20,7 +20,7 @@ def get_travel_plan(question: str) -> str:
         print(f"\n📥 Received query: {question}")
 
         # Initialize the agent workflow
-        graph_builder = GraphBuilder(model_provider="gemini")
+        graph_builder = GraphBuilder(model_provider="openai")
 
         # Debug: list registered tools
         print("\n🔧 Registered Tools:")
